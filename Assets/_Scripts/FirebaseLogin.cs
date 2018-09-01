@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FirebaseLogin : MonoBehaviour {
 
+	public Text infoText;
 	Firebase.Auth.FirebaseAuth auth;
 	
 	// Use this for initialization
@@ -19,17 +21,22 @@ public class FirebaseLogin : MonoBehaviour {
 	public void GuestLogin() {
 		this.auth.SignInAnonymouslyAsync().ContinueWith(task => {
 			if (task.IsCanceled) {
-				Debug.LogError("SignInAnonymouslyAsync was canceled.");
+				string errorMsg = "SignInAnonymouslyAsync was canceled.";
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
 				return;
 			}
 			if (task.IsFaulted) {
-				Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+				string errorMsg = "SignInAnonymouslyAsync encountered an error: " + task.Exception;
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
 				return;
 			}
 
 			Firebase.Auth.FirebaseUser newUser = task.Result;
 			Debug.LogFormat("User signed in successfully: {0} ({1})",
 				newUser.DisplayName, newUser.UserId);
+			this.infoText.text = "User signed in successfully: " + newUser.UserId;
 			});
 	}
 }
