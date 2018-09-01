@@ -240,8 +240,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: E:/Disco F/Unity/unity-firebase/user.keystore
+  AndroidKeyaliasName: unity-firebase
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0

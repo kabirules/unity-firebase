@@ -39,4 +39,63 @@ public class FirebaseLogin : MonoBehaviour {
 			this.infoText.text = "User signed in successfully: " + newUser.UserId;
 			});
 	}
+
+	public void GoogleLogin() {
+		string googleIdToken = "";
+		string googleAccessToken = null;
+		Firebase.Auth.Credential credential =
+			Firebase.Auth.GoogleAuthProvider.GetCredential(googleIdToken, googleAccessToken);
+		this.auth.SignInWithCredentialAsync(credential).ContinueWith(task => {
+			if (task.IsCanceled) {
+				string errorMsg = "SignInWithCredentialAsync was canceled.";
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
+				return;
+			}
+			if (task.IsFaulted) {
+				string errorMsg = "SignInWithCredentialAsync encountered an error: " + task.Exception;
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
+				return;
+			}
+
+			Firebase.Auth.FirebaseUser newUser = task.Result;
+			Debug.LogFormat("User signed in successfully: {0} ({1})",
+				newUser.DisplayName, newUser.UserId);
+			this.infoText.text = "User signed in successfully: " + newUser.UserId;
+		});
+	}
+
+	public void EmailLogin() {
+		auth.CreateUserWithEmailAndPasswordAsync("javifont@gmail.com", "CoolPassword1").ContinueWith(task => {
+			if (task.IsCanceled) {
+				string errorMsg = "CreateUserWithEmailAndPasswordAsync was canceled.";
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
+				return;
+			}
+			if (task.IsFaulted) {
+				string errorMsg = "CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception;
+				Debug.LogError(errorMsg);
+				this.infoText.text = errorMsg;
+				return;
+			}
+
+			// Firebase user has been created.
+			Firebase.Auth.FirebaseUser newUser = task.Result;
+			Debug.LogFormat("Firebase user created successfully: {0} ({1})",
+				newUser.DisplayName, newUser.UserId);
+			this.infoText.text = "User signed in successfully: " + newUser.UserId;
+			});		
+	}
+/*
+	public string GetGoogleTokenID() {
+		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+					.RequestIdToken()
+					.Build();
+		PlayGamesPlatform.InitializeInstance(config);
+		PlayGamesPlatform.Activate();		
+		return "";
+	}
+*/
 }
