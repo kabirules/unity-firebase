@@ -18,7 +18,7 @@ public class FirebaseLogin : MonoBehaviour {
 		
 	}
 
-	public void GuestLogin() {
+	public void GuestSignIn() {
 		this.auth.SignInAnonymouslyAsync().ContinueWith(task => {
 			if (task.IsCanceled) {
 				string errorMsg = "SignInAnonymouslyAsync was canceled.";
@@ -40,7 +40,8 @@ public class FirebaseLogin : MonoBehaviour {
 			});
 	}
 
-	public void GoogleLogin() {
+	// TODO Unused...
+	public void GoogleSignIn() {
 		string googleIdToken = "";
 		string googleAccessToken = null;
 		Firebase.Auth.Credential credential =
@@ -66,8 +67,11 @@ public class FirebaseLogin : MonoBehaviour {
 		});
 	}
 
-	public void EmailLogin() {
-		auth.CreateUserWithEmailAndPasswordAsync("javifont@gmail.com", "CoolPassword1").ContinueWith(task => {
+	// User creation with email
+	public void EmailSignIn() {
+		string user = "javifont@gmail.com";
+		string password = "CoolPassword1";
+		auth.CreateUserWithEmailAndPasswordAsync(user, password).ContinueWith(task => {
 			if (task.IsCanceled) {
 				string errorMsg = "CreateUserWithEmailAndPasswordAsync was canceled.";
 				Debug.LogError(errorMsg);
@@ -88,6 +92,39 @@ public class FirebaseLogin : MonoBehaviour {
 			this.infoText.text = "User signed in successfully: " + newUser.UserId;
 			});		
 	}
+
+
+	public void EmailLogIn() {
+		string user = "javifont@gmail.com";
+		string password = "CoolPassword1";
+		this.auth.SignInWithEmailAndPasswordAsync(user, password).ContinueWith(task => {
+		if (task.IsCanceled) {
+			string errorMsg = "SignInWithEmailAndPasswordAsync was canceled.";
+			Debug.LogError(errorMsg);
+			this.infoText.text = errorMsg;
+			return;
+		}
+		if (task.IsFaulted) {
+			string errorMsg = "SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception;
+			Debug.LogError(errorMsg);
+			this.infoText.text = errorMsg;
+			return;
+		}
+
+		Firebase.Auth.FirebaseUser newUser = task.Result;
+		Debug.LogFormat("User signed in successfully: {0} ({1})",
+			newUser.DisplayName, newUser.UserId);
+		this.infoText.text = "User logged in successfully: " + newUser.UserId;
+		});
+	}
+
+	public void LogOut() {
+		this.auth.SignOut();
+		string errorMsg = "User logged out";
+		this.infoText.text = errorMsg;
+	}
+
+	
 /*
 	public string GetGoogleTokenID() {
 		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
